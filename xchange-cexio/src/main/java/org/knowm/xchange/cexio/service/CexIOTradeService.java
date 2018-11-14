@@ -84,7 +84,7 @@ public class CexIOTradeService extends CexIOTradeServiceRaw implements TradeServ
       cancelCexIOOrders(((CancelOrderByCurrencyPair) orderParams).getCurrencyPair());
       return true;
     } else {
-      return false;
+          throw new IllegalArgumentException(String.format("Unknown parameter type: %s", orderParams.getClass()));
     }
   }
 
