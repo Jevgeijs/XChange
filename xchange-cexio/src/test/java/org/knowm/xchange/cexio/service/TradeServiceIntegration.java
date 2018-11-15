@@ -12,6 +12,7 @@ import org.knowm.xchange.cexio.dto.trade.CexIOOrderWithTransactions;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.trade.LimitOrder;
+import org.knowm.xchange.service.trade.params.CancelOrderByCurrencyPair;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -84,6 +85,32 @@ public class TradeServiceIntegration {
 
     Assert.assertTrue(
         "Returned order must be canceled", orders.get(0).getStatus() == Order.OrderStatus.CANCELED);
+  }
+
+  @Test
+  public void cancelAllOrdersTest() throws IOException, InterruptedException {
+    String orderId = tradeService.placeLimitOrder(order);
+    String orderId2 = tradeService.placeLimitOrder(order);
+
+    tradeService.cancelOrder(new CancelOrderByCurrencyPair() {
+      @Override
+      public CurrencyPair getCurrencyPair() {
+        return new CurrencyPair("BCH/USD");
+      }
+    });
+
+    List<Order> orders = (List<Order>) tradeService.getOrder(orderId, orderId2);
+
+    Assert.assertTrue("Order response must contain 2 orderы", orders.size() == 2);
+
+    Assert.assertTrue(
+            "Returned order 1 id must be the same as placed", orderId.equals(orders.get(0).getId()));
+    Assert.assertTrue(
+            "Returned order 2 id must be the same as placed", orderId2.equals(orders.get(1).getId()));
+    Assert.assertTrue(
+            "Order 1 must be canceled", orders.get(0).getStatus() == Order.OrderStatus.CANCELED);
+    Assert.assertTrue(
+            "Order 2 must be canceled", orders.get(1).getStatus() == Order.OrderStatus.CANCELED);
   }
 
   public LimitOrder buildOrder(
