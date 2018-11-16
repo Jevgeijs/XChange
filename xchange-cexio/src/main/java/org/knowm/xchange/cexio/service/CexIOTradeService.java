@@ -57,7 +57,7 @@ public class CexIOTradeService extends CexIOTradeServiceRaw implements TradeServ
   @Override
   public String placeMarketOrder(MarketOrder marketOrder) throws IOException {
 
-      CexIOMarketOrder order = placeCexIOMarketOrder(marketOrder);
+      CexIOOrder order = placeCexIOMarketOrder(marketOrder);
 
       return Long.toString(order.getId());
   }

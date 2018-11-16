@@ -51,21 +51,26 @@ public class CexIOTradeServiceRaw extends CexIOBaseService {
             new PlaceOrderRequest(
                 (limitOrder.getType() == BID ? CexIOOrder.Type.buy : CexIOOrder.Type.sell),
                 limitOrder.getLimitPrice(),
-                limitOrder.getOriginalAmount()));
+                limitOrder.getOriginalAmount(),
+                  "limit"));
     if (order.getErrorMessage() != null) {
       throw new ExchangeException(order.getErrorMessage());
     }
     return order;
   }
 
-  public CexIOMarketOrder placeCexIOMarketOrder(MarketOrder marketOrder) throws IOException {
-    CexIOMarketOrder order = cexIOAuthenticated.placeMarketOrder(
-            signatureCreator,
-            marketOrder.getCurrencyPair().base.getCurrencyCode(),
-            marketOrder.getCurrencyPair().counter.getCurrencyCode(),
-            new PlaceMarketOrderRequest(
-                    (marketOrder.getType() == BID ? CexIOOrder.Type.buy : CexIOOrder.Type.sell),
-                    marketOrder.getOriginalAmount()));
+  public CexIOOrder placeCexIOMarketOrder(MarketOrder marketOrder) throws IOException {
+
+    CexIOOrder order =
+            cexIOAuthenticated.placeOrder(
+                    signatureCreator,
+                    marketOrder.getCurrencyPair().base.getCurrencyCode(),
+                    marketOrder.getCurrencyPair().counter.getCurrencyCode(),
+                    new PlaceOrderRequest(
+                            (marketOrder.getType() == BID ? CexIOOrder.Type.buy : CexIOOrder.Type.sell),
+                            null,
+                            marketOrder.getOriginalAmount(),
+                            "market"));
     if (order.getErrorMessage() != null) {
       throw new ExchangeException(order.getErrorMessage());
     }

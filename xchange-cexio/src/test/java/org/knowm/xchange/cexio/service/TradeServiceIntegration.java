@@ -132,7 +132,7 @@ public class TradeServiceIntegration {
     Assert.assertTrue(
             "Order 3 must be placed", orders.get(2).getStatus() == Order.OrderStatus.PENDING_NEW);
     Assert.assertTrue("Order 3 must have `endPrice` price",
-            ((LimitOrder) orders.get(2)).getLimitPrice().equals(endPrice));
+            ((LimitOrder) orders.get(2)).getLimitPrice().compareTo(endPrice) == 0);
 
     tradeService.cancelOrder((CancelOrderByCurrencyPair) () -> new CurrencyPair("BCH/USD"));
   }

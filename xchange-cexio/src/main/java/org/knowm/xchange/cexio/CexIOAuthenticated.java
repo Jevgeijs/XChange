@@ -72,15 +72,6 @@ public interface CexIOAuthenticated extends CexIO {
       PlaceOrderRequest placeOrderRequest)
       throws IOException;
 
-  @POST
-  @Path("place_order/{currencyA}/{currencyB}/")
-  CexIOMarketOrder placeMarketOrder(
-          @HeaderParam("_ignored_") ParamsDigest signer,
-          @PathParam("currencyA") String currencyA,
-          @PathParam("currencyB") String currencyB,
-          PlaceMarketOrderRequest placeMarketOrderRequest)
-          throws IOException;
-
   // GHash.IO calls
   @POST
   @Path("ghash.io/hashrate")
