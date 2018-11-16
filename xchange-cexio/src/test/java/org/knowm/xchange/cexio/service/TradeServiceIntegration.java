@@ -40,9 +40,9 @@ public class TradeServiceIntegration {
 
     order =
         buildOrder(
-            Order.OrderType.BID,
+            Order.OrderType.ASK,
             CurrencyPair.BCH_USD,
-            BigDecimal.valueOf(300),
+            BigDecimal.valueOf(420),
             BigDecimal.valueOf(0.02));
   }
 
@@ -88,7 +88,7 @@ public class TradeServiceIntegration {
   }
 
   @Test
-  public void cancelAllOrdersTest() throws IOException, InterruptedException {
+  public void CancelOrderByCurrencyPair() throws IOException, InterruptedException {
     String orderId = tradeService.placeLimitOrder(order);
     String orderId2 = tradeService.placeLimitOrder(order);
 
@@ -101,8 +101,7 @@ public class TradeServiceIntegration {
 
     List<Order> orders = (List<Order>) tradeService.getOrder(orderId, orderId2);
 
-    Assert.assertTrue("Order response must contain 2 orderы", orders.size() == 2);
-
+    Assert.assertTrue("Order response must contain 2 orders", orders.size() == 2);
     Assert.assertTrue(
             "Returned order 1 id must be the same as placed", orderId.equals(orders.get(0).getId()));
     Assert.assertTrue(
@@ -111,6 +110,34 @@ public class TradeServiceIntegration {
             "Order 1 must be canceled", orders.get(0).getStatus() == Order.OrderStatus.CANCELED);
     Assert.assertTrue(
             "Order 2 must be canceled", orders.get(1).getStatus() == Order.OrderStatus.CANCELED);
+  }
+
+  @Test
+  public void modifyOrder() throws IOException, InterruptedException {
+    BigDecimal modifyPrice = new BigDecimal(422);
+    BigDecimal endPrice = new BigDecimal(424);
+
+    String orderId = tradeService.placeLimitOrder(order);
+
+    LimitOrder order2 = new LimitOrder(order.getType(), order.getOriginalAmount(), order.getCurrencyPair(),
+            orderId, order.getTimestamp(), modifyPrice);
+    String orderId2 = tradeService.modifyOrder(order2);
+
+    LimitOrder order3 = new LimitOrder(order.getType(), order.getOriginalAmount(), order.getCurrencyPair(),
+            orderId2, order.getTimestamp(), endPrice);
+    String orderId3 = tradeService.modifyOrder(order3);
+
+    List<Order> orders = (List<Order>) tradeService.getOrder(orderId, orderId2, orderId3);
+
+    Assert.assertTrue("Order response must contain 1 order", orders.size() == 3);
+    Assert.assertTrue(
+            "Order 1 must be canceled", orders.get(0).getStatus() == Order.OrderStatus.CANCELED);
+    Assert.assertTrue(
+            "Order 2 must be canceled", orders.get(1).getStatus() == Order.OrderStatus.CANCELED);
+    Assert.assertTrue(
+            "Order 3 must be placed", orders.get(2).getStatus() == Order.OrderStatus.PENDING_NEW);
+    Assert.assertTrue("Order 3 must have `endPrice` price",
+            ((LimitOrder) orders.get(2)).getLimitPrice().equals(endPrice));
   }
 
   public LimitOrder buildOrder(

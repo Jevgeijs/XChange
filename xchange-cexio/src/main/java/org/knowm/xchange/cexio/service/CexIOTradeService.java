@@ -7,6 +7,7 @@ import java.util.List;
 import org.knowm.xchange.Exchange;
 import org.knowm.xchange.cexio.CexIOAdapters;
 import org.knowm.xchange.cexio.dto.trade.CexIOArchivedOrder;
+import org.knowm.xchange.cexio.dto.trade.CexIOCancelReplaceOrderResponse;
 import org.knowm.xchange.cexio.dto.trade.CexIOOpenOrder;
 import org.knowm.xchange.cexio.dto.trade.CexIOOrder;
 import org.knowm.xchange.dto.Order;
@@ -86,6 +87,13 @@ public class CexIOTradeService extends CexIOTradeServiceRaw implements TradeServ
     } else {
           throw new IllegalArgumentException(String.format("Unknown parameter type: %s", orderParams.getClass()));
     }
+  }
+
+  @Override
+  public String modifyOrder(LimitOrder limitOrder) throws IOException {
+    CexIOCancelReplaceOrderResponse response = cancelReplaceCexIOOrder(limitOrder.getCurrencyPair(),
+            limitOrder.getType(), limitOrder.getId(), limitOrder.getOriginalAmount(), limitOrder.getLimitPrice());
+    return response.getId();
   }
 
   @Override
