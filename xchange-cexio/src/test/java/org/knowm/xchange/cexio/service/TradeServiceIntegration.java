@@ -92,12 +92,7 @@ public class TradeServiceIntegration {
     String orderId = tradeService.placeLimitOrder(order);
     String orderId2 = tradeService.placeLimitOrder(order);
 
-    tradeService.cancelOrder(new CancelOrderByCurrencyPair() {
-      @Override
-      public CurrencyPair getCurrencyPair() {
-        return new CurrencyPair("BCH/USD");
-      }
-    });
+    tradeService.cancelOrder((CancelOrderByCurrencyPair) () -> new CurrencyPair("BCH/USD"));
 
     List<Order> orders = (List<Order>) tradeService.getOrder(orderId, orderId2);
 
@@ -138,6 +133,8 @@ public class TradeServiceIntegration {
             "Order 3 must be placed", orders.get(2).getStatus() == Order.OrderStatus.PENDING_NEW);
     Assert.assertTrue("Order 3 must have `endPrice` price",
             ((LimitOrder) orders.get(2)).getLimitPrice().equals(endPrice));
+
+    tradeService.cancelOrder((CancelOrderByCurrencyPair) () -> new CurrencyPair("BCH/USD"));
   }
 
   public LimitOrder buildOrder(
