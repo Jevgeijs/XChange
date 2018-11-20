@@ -40,9 +40,9 @@ public class TradeServiceIntegration {
 
     order =
         buildOrder(
-            Order.OrderType.ASK,
+            Order.OrderType.BID,
             CurrencyPair.BCH_USD,
-            BigDecimal.valueOf(420),
+            BigDecimal.valueOf(300),
             BigDecimal.valueOf(0.02));
   }
 
@@ -109,8 +109,8 @@ public class TradeServiceIntegration {
 
   @Test
   public void modifyOrder() throws IOException, InterruptedException {
-    BigDecimal modifyPrice = new BigDecimal(422);
-    BigDecimal endPrice = new BigDecimal(424);
+    BigDecimal modifyPrice = new BigDecimal(302);
+    BigDecimal endPrice = new BigDecimal(304);
 
     String orderId = tradeService.placeLimitOrder(order);
 

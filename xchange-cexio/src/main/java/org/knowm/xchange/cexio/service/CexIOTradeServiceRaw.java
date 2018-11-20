@@ -60,7 +60,6 @@ public class CexIOTradeServiceRaw extends CexIOBaseService {
   }
 
   public CexIOOrder placeCexIOMarketOrder(MarketOrder marketOrder) throws IOException {
-
     CexIOOrder order =
             cexIOAuthenticated.placeOrder(
                     signatureCreator,

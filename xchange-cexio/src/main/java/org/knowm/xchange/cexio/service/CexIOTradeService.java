@@ -56,23 +56,26 @@ public class CexIOTradeService extends CexIOTradeServiceRaw implements TradeServ
 
   @Override
   public String placeMarketOrder(MarketOrder marketOrder) throws IOException {
+      /*
+    Only in market order!
+    Presently, the exchanger is designed in such way that, depending on the BID/ASK the currency changes
+      (accordingly, you must specify the amount in another currency)
+    Example: CurrencyPair.BCH_USD, Order.OrderType.ASK, Amount = 0.02 (BCH)
+    Example: CurrencyPair.BCH_USD, Order.OrderType.BID, Amount = 20 (USD)
+    Сurrently cannot be implemented!
+    */
 
-      CexIOOrder order = placeCexIOMarketOrder(marketOrder);
-
-      return Long.toString(order.getId());
+    throw new NotAvailableFromExchangeException();
   }
 
   @Override
   public String placeLimitOrder(LimitOrder limitOrder) throws IOException {
-
     CexIOOrder order = placeCexIOLimitOrder(limitOrder);
-
     return Long.toString(order.getId());
   }
 
   @Override
   public boolean cancelOrder(String orderId) throws IOException {
-
     return cancelCexIOOrder(orderId);
   }
 
